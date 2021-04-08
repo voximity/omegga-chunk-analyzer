@@ -75,12 +75,14 @@ module.exports = class ChunkAnalyzer {
         for (var i = 0; i < save.bricks.length; i++) {
             const brick = save.bricks[i];
             const chunkPos = this.positionToChunk(...brick.position);
-            const colliderCount = COLLIDERS[save.brick_assets[brick.asset_name_index]];
-            if (chunks[chunkPos] != null) {
-                chunks[chunkPos][0]++;
-                chunks[chunkPos][1] += colliderCount;
+            const key = `${chunkPos[0]},${chunkPos[1]},${chunkPos[2]}`
+            const fetchedColliderCount = COLLIDERS[save.brick_assets[brick.asset_name_index]];
+            const colliderCount = fetchedColliderCount == null || isNaN(fetchedColliderCount) ? 1 : fetchedColliderCount;
+            if (chunks[key] != null) {
+                chunks[key][0]++;
+                chunks[key][1] += colliderCount;
             } else
-                chunks[chunkPos] = [1, colliderCount];
+                chunks[key] = [1, colliderCount];
         }
 
         return chunks;
